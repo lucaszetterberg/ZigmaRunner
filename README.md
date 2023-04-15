@@ -1,1 +1,2 @@
-# Grindset
+# ZigmaRunner
+:joystick: The game
