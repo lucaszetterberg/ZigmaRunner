@@ -1,21 +1,47 @@
 import pygame 
 import random
+import os
 
 pygame.init()
 
+## Global constants
+screenWidth = 1200
+screenHeight = 700
+SCREEN = pygame.display.set_mode((screenWidth, screenHeight))
+gameSpeed = 30
+CLOUD = pygame.image.load(os.path.join("Cloud.png"))
+
+
+
+
+class Cloud:
+    def __init__(self):
+        self.x = screenWidth + random.randint(800, 1000)
+        self.y = random.randint(50, 100)
+        self.image = CLOUD
+        self.width = self.image.get_width()
+
+    def update(self):
+        self.x -= gameSpeed
+        if self.x < -self.width:
+            self.x = screenWidth + random.randint(2500, 3000)
+            self.y = random.randint(50, 100)
+
+    def draw(self, SCREEN):
+        SCREEN.blit(self.image, (self.x, self.y))
+
 def main(): 
-    
-    
+
+
     ## Parameters for screen an player setup
-    screenWidth = 1200
-    screenHeight = 700
     player_x = 100
     player_y = 580
     deltaY = 0
     deltaX = 0
-    gravity = 1
-    
-    gameSpeed = 20
+    gravity = 2
+    x_pos_bg = 0
+    y_pos_bg = 380
+    cloud = Cloud()
 
     ## Objects for colours, placeholder for when images are added
     black = (0,0,0)
@@ -38,6 +64,8 @@ def main():
         screen.fill(background)
         floor = pygame.draw.rect(screen, white, [0, 600, screenWidth, 5])
         player = pygame.draw.rect(screen, white, [player_x, player_y, 20, 20])
+        cloud.draw(SCREEN)
+        cloud.update()
         
         ## Keylistening
         for event in pygame.event.get():
@@ -62,5 +90,4 @@ def main():
         
         pygame.display.flip()
     pygame.quit()
-    
 main()
