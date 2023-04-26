@@ -5,11 +5,15 @@ import os
 pygame.init()
 
 ## Global constants
+global gameSpeed, x_pos_bg, y_pos_bg
+x_pos_bg = 0
+y_pos_bg = 380
 screenWidth = 1200
 screenHeight = 700
 SCREEN = pygame.display.set_mode((screenWidth, screenHeight))
 gameSpeed = 30
 CLOUD = pygame.image.load(os.path.join("Cloud.png"))
+BG = pygame.image.load(os.path.join("Track.png"))
 
 
 
@@ -24,7 +28,7 @@ class Cloud:
     def update(self):
         self.x -= gameSpeed
         if self.x < -self.width:
-            self.x = screenWidth + random.randint(2500, 3000)
+            self.x = screenWidth + random.randint(3800, 3800)
             self.y = random.randint(50, 100)
 
     def draw(self, SCREEN):
@@ -35,14 +39,13 @@ def main():
 
     ## Parameters for screen an player setup
     player_x = 100
-    player_y = 580
+    player_y = 380
     deltaY = 0
     deltaX = 0
     gravity = 2
     x_pos_bg = 0
-    y_pos_bg = 380
+    y_pos_bg = 300
     cloud = Cloud()
-
     ## Objects for colours, placeholder for when images are added
     black = (0,0,0)
     white = (235,235,235)
@@ -57,13 +60,24 @@ def main():
     ## Makes timer, sets gameRunning to true (if gameRunning is false the game will not run)
     timer = pygame.time.Clock()
     gameRunning = True
+
+
+    def draw_background():
+        global x_pos_bg, y_pos_bg
+        image_width = BG.get_width()
+        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+        if x_pos_bg <= -image_width:
+            SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+            x_pos_bg = 0
+        x_pos_bg -= gameSpeed
     
     ## Main game loop, can be viewed as what is happening in each frame
     while gameRunning:
         timer.tick(fps)
         screen.fill(background)
-        floor = pygame.draw.rect(screen, white, [0, 600, screenWidth, 5])
         player = pygame.draw.rect(screen, white, [player_x, player_y, 20, 20])
+        draw_background()
         cloud.draw(SCREEN)
         cloud.update()
         
@@ -76,16 +90,16 @@ def main():
                     deltaY = 20
         
         ## If statement for gravity
-        if deltaY > 0 or player_y < 580:
+        if deltaY > 0 or player_y < 380:
             player_y -= deltaY
             deltaY -= gravity
         
         ## I player for some reason gets placed under the floor, this if statement will place it back on it
-        if player_y > 580:
-            player_y = 580
+        if player_y > 380:
+            player_y = 380
         
         ## Tells the game that if player is on ground level it should stop falling
-        if player_y == 580 and deltaY < 0:
+        if player_y == 380 and deltaY < 0:
             deltaY = 0
         
         pygame.display.flip()
