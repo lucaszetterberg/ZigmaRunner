@@ -13,7 +13,7 @@ def main():
     player_y = 580
     deltaY = 0
     deltaX = 0
-    gravity = 1
+    gravity = 2
     
     gameSpeed = 20
 
