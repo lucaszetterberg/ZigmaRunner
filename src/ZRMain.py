@@ -87,7 +87,7 @@ class Player:
         self.step_index += 1
 
     def jump(self):
-        self.image = self.jump_img
+        self.image = self.jump_img[0]
         if self.player_jump:
             self.player_rect.y -= self.jump_vel * 4
             self.jump_vel -= 0.8
