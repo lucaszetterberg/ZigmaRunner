@@ -5,6 +5,18 @@ import os
 pygame.init()
 
 
+
+## Global constants
+global gameSpeed, x_pos_bg, y_pos_bg
+x_pos_bg = 0
+y_pos_bg = 380
+gameSpeed = 30
+black = (0,0,0)
+white = (235,235,235)
+
+CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
+BG = pygame.image.load(os.path.join("src", "Track.png"))
+
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1200
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -76,23 +88,13 @@ class Player:
     def jump(self):
         pass
 
-## Global constants
-global gameSpeed, x_pos_bg, y_pos_bg
-x_pos_bg = 0
-y_pos_bg = 380
-screenWidth = 1200
-screenHeight = 700
-SCREEN = pygame.display.set_mode((screenWidth, screenHeight))
-gameSpeed = 30
-CLOUD = pygame.image.load(os.path.join("Cloud.png"))
-BG = pygame.image.load(os.path.join("Track.png"))
-
-
+    def draw(self, SCREEN):
+        SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
 
 
 class Cloud:
     def __init__(self):
-        self.x = screenWidth + random.randint(800, 1000)
+        self.x = SCREEN_WIDTH + random.randint(800, 1000)
         self.y = random.randint(50, 100)
         self.image = CLOUD
         self.width = self.image.get_width()
@@ -100,34 +102,20 @@ class Cloud:
     def update(self):
         self.x -= gameSpeed
         if self.x < -self.width:
-            self.x = screenWidth + random.randint(3800, 3800)
+            self.x = SCREEN_WIDTH + random.randint(3800, 3800)
             self.y = random.randint(50, 100)
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
 
-def main(): 
-
 
     ## Parameters for screen an player setup
-    player_x = 100
-    player_y = 380
-    deltaY = 0
-    deltaX = 0
-    gravity = 2
-    x_pos_bg = 0
-    y_pos_bg = 300
-    cloud = Cloud()
     ## Objects for colours, placeholder for when images are added
-    black = (0,0,0)
-    white = (235,235,235)
     
-    def draw(self, SCREEN):
-        SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
         
         
 def main(): 
-
+    cloud = Cloud()
     
     ## Makes timer, sets gameRunning to true (if gameRunning is false the game will not run)
     timer = pygame.time.Clock()
@@ -154,8 +142,7 @@ def main():
     while GAMERUNNING:
         timer.tick(fps)
 
-        screen.fill(background)
-        player = pygame.draw.rect(screen, white, [player_x, player_y, 20, 20])
+        SCREEN.fill((black))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
@@ -166,7 +153,6 @@ def main():
 
                 GAMERUNNING = False
 
-        SCREEN.fill((255, 255, 255))
         userInput = pygame.key.get_pressed()
 
         player.draw(SCREEN)
