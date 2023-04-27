@@ -7,13 +7,14 @@ pygame.init()
 
 
 ## Global constants
+global gameSpeed, obstacles
 x_pos_bg = 0
 y_pos_bg = 380
 points = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
-gameSpeed = 30
+gameSpeed = 15
 black = (0,0,0)
-white = (235,235,235)
+white = (200,200,200)
 
 CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
@@ -22,9 +23,9 @@ SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1200
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-RUNNING = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-JUMPING = pygame.image.load(os.path.join("images", "LargeCactus1.png"))
-DUCKING = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
+RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.image.load(os.path.join("images", "ZigmaRun2.png"))]
+JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
+SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
 LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
@@ -32,17 +33,23 @@ LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
 pygame.display.set_caption("Zigma runner")
 fps = 60 
 font = pygame.font.Font("freesansbold.ttf",16)
+obstacles = []
 
 class Player:
     PLAYER_X = 80
     PLAYER_Y = 310
+
+    PLAYER_Y_SLIDE = 340
+
+
     JUMP_VEL = 8,5
+
     def __init__(self):
-        self.duck_img = DUCKING
+        self.slide_img = SLIDING
         self.run_img = RUNNING
         self.jump_img = JUMPING
 
-        self.player_duck = False
+        self.player_slide = False
         self.player_run = True
         self.player_jump = False
 
@@ -53,34 +60,37 @@ class Player:
         self.player_rect.y = self.PLAYER_Y
 
     def update(self, keyboardInput):
-        if self.player_duck:
-            self.duck()
+        if self.player_slide:
+            self.slide()
         if self.player_run:
             self.run()
         if self.player_jump:
             self.jump()
-
         if self.step_index >= 10:
             self.step_index = 0
 
         if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
-            self.player_duck = False
+            self.player_slide = False
             self.player_run = False
             self.player_jump = True
         elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
-            self.player_duck = True
+            self.player_slide = True
             self.player_run = False
             self.player_jump = False
         elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
-            self.player_duck = False
+            self.player_slide = False
             self.player_run = True
             self.player_jump = False
 
-    def duck(self):
-       pass
-
+    def slide(self):
+        self.image = self.slide_img[0]
+        self.player_rect = self.image.get_rect()
+        self.player_rect.x = self.PLAYER_X
+        self.player_rect.y = self.PLAYER_Y_SLIDE
+        self.step_index += 1
+        
     def run(self):
-        self.image = self.run_img[0]
+        self.image = self.run_img[self.step_index // 5]
         self.player_rect = self.image.get_rect()
         self.player_rect.x = self.PLAYER_X
         self.player_rect.y = self.PLAYER_Y
@@ -98,7 +108,33 @@ class Player:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
     
+class Obstacle:
+    def __init__(self, image, type):
+        self.image
+        self.type
+        self.rect = self.image[self.type].get_rect()
+        self.rect.x = SCREEN_WIDTH
+        
+    def update(self):
+        self.rect.x -= gameSpeed
+        if self.rect.x < -self.rect.width:
+            obstacles.pop()
+    
+    def draw(self, ZRMain):
+        SCREEN.blit(self.image[self.type], self.rect)
 
+class SmallCactus(Obstacle):
+    def __init__(self, image):
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 325
+        
+class LargeCactus(Obstacle):
+    def __init__(self, image):
+        self.image = image
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 300
 
 class Cloud:
     def __init__(self):
@@ -119,9 +155,7 @@ class Cloud:
 
     ## Parameters for screen an player setup
     ## Objects for colours, placeholder for when images are added
-    
-        
-        
+          
 def main(): 
     cloud = Cloud()
     
@@ -131,8 +165,6 @@ def main():
     player = Player()
     GAMERUNNING = True
         
-
-    gameRunning = True
     global gameSpeed, x_pos_bg, y_pos_bg, points
     def score():
         global points, gameSpeed
@@ -160,7 +192,7 @@ def main():
     
     while GAMERUNNING:
         timer.tick(fps)
-        SCREEN.fill((black))
+        SCREEN.fill((white))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
@@ -170,10 +202,19 @@ def main():
 
                 GAMERUNNING = False
 
-        userInput = pygame.key.get_pressed()
+        keyboardInput = pygame.key.get_pressed()
+        
+        if len(obstacles) == 0:
+            obstacles.append(LargeCactus(LARGE_CACTUS))
+        
+        for obstacle in obstacles:
+            obstacle.draw(SCREEN)
+            obstacle.update()
+            if player.player_rect.colliderect(obstacle.rect):
+                pygame.draw.rect(SCREEN, (250, 0, 0), player.player_rect, 2)
 
         player.draw(SCREEN)
-        player.update(userInput)
+        player.update(keyboardInput)
         
         pygame.display.flip()
     
