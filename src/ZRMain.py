@@ -7,9 +7,10 @@ pygame.init()
 
 
 ## Global constants
-global gameSpeed, x_pos_bg, y_pos_bg
 x_pos_bg = 0
 y_pos_bg = 380
+points = 0
+font = pygame.font.Font('freesansbold.ttf', 20)
 gameSpeed = 30
 black = (0,0,0)
 white = (235,235,235)
@@ -90,6 +91,7 @@ class Player:
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
+    
 
 
 class Cloud:
@@ -125,6 +127,17 @@ def main():
         
 
     gameRunning = True
+    global gameSpeed, x_pos_bg, y_pos_bg, points
+    def score():
+        global points, gameSpeed
+        points += 1
+        if points % 100  == 0:
+            gameSpeed += 1
+
+        text = font.render("Points: " + str(points), True, (255,255,255))
+        textRect = text.get_rect()
+        textRect.center = (1100, 40)
+        SCREEN.blit(text, textRect)
 
 
     def draw_background():
@@ -141,13 +154,11 @@ def main():
     
     while GAMERUNNING:
         timer.tick(fps)
-
         SCREEN.fill((black))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
-
-        
+        score()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
 
