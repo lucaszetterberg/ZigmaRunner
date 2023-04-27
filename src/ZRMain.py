@@ -91,7 +91,7 @@ class Player:
         if self.player_jump:
             self.player_rect.y -= self.jump_vel * 4
             self.jump_vel -= 0.8
-        if self.jump_vel < - self.JUMP_VEL:
+        if  self.jump_vel < - self.JUMP_VEL:
             self.player_jump = False
             self.jump_vel = self.JUMP_VEL
 
