@@ -13,7 +13,7 @@ points = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
 gameSpeed = 30
 black = (0,0,0)
-white = (235,235,235)
+white = (200,200,200)
 
 CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
@@ -22,8 +22,8 @@ SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1200
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-RUNNING = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-JUMPING = pygame.image.load(os.path.join("images", "LargeCactus1.png"))
+RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.image.load(os.path.join("images", "ZigmaRun2.png"))]
+JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
 DUCKING = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
@@ -80,7 +80,7 @@ class Player:
        pass
 
     def run(self):
-        self.image = self.run_img[0]
+        self.image = self.run_img[self.step_index // 5]
         self.player_rect = self.image.get_rect()
         self.player_rect.x = self.PLAYER_X
         self.player_rect.y = self.PLAYER_Y
@@ -154,7 +154,7 @@ def main():
     
     while GAMERUNNING:
         timer.tick(fps)
-        SCREEN.fill((black))
+        SCREEN.fill((white))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
