@@ -7,11 +7,12 @@ pygame.init()
 
 
 ## Global constants
+global gameSpeed, obstacles
 x_pos_bg = 0
 y_pos_bg = 380
 points = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
-gameSpeed = 30
+gameSpeed = 15
 black = (0,0,0)
 white = (200,200,200)
 
@@ -32,6 +33,7 @@ LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
 pygame.display.set_caption("Zigma runner")
 fps = 60 
 font = pygame.font.Font("freesansbold.ttf",16)
+obstacles = []
 
 class Player:
     PLAYER_X = 80
@@ -96,7 +98,33 @@ class Player:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
     
+class Obstacle:
+    def __init__(self, image, type):
+        self.image
+        self.type
+        self.rect = self.image[self.type].get_rect()
+        self.rect.x = SCREEN_WIDTH
+        
+    def update(self):
+        self.rect.x -= gameSpeed
+        if self.rect.x < -self.rect.width:
+            obstacles.pop()
+    
+    def draw(self, ZRMain):
+        SCREEN.blit(self.image[self.type], self.rect)
 
+class SmallCactus(Obstacle):
+    def __init__(self, image):
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 325
+        
+class LargeCactus(Obstacle):
+    def __init__(self, image):
+        self.image = image
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 300
 
 class Cloud:
     def __init__(self):
@@ -117,9 +145,7 @@ class Cloud:
 
     ## Parameters for screen an player setup
     ## Objects for colours, placeholder for when images are added
-    
-        
-        
+          
 def main(): 
     cloud = Cloud()
     
@@ -129,8 +155,6 @@ def main():
     player = Player()
     GAMERUNNING = True
         
-
-    gameRunning = True
     global gameSpeed, x_pos_bg, y_pos_bg, points
     def score():
         global points, gameSpeed
@@ -168,10 +192,19 @@ def main():
 
                 GAMERUNNING = False
 
-        userInput = pygame.key.get_pressed()
+        keyboardInput = pygame.key.get_pressed()
+        
+        if len(obstacles) == 0:
+            obstacles.append(LargeCactus(LARGE_CACTUS))
+        
+        for obstacle in obstacles:
+            obstacle.draw(SCREEN)
+            obstacle.update()
+            if player.player_rect.colliderect(obstacle.rect):
+                pygame.draw.rect(SCREEN, (250, 0, 0), player.player_rect, 2)
 
         player.draw(SCREEN)
-        player.update(userInput)
+        player.update(keyboardInput)
         
         pygame.display.flip()
     
