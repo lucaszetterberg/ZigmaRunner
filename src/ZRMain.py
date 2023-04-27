@@ -38,11 +38,8 @@ obstacles = []
 class Player:
     PLAYER_X = 80
     PLAYER_Y = 310
-
     PLAYER_Y_SLIDE = 340
-
-
-    JUMP_VEL = 8,5
+    JUMP_VEL = 8.5
 
     def __init__(self):
         self.slide_img = SLIDING
@@ -58,6 +55,7 @@ class Player:
         self.player_rect = self.image.get_rect()
         self.player_rect.x = self.PLAYER_X
         self.player_rect.y = self.PLAYER_Y
+        self.jump_vel = self.JUMP_VEL
 
     def update(self, keyboardInput):
         if self.player_slide:
@@ -97,13 +95,14 @@ class Player:
         self.step_index += 1
 
     def jump(self):
-        self.image = self.jump_img[0]
+        self.image = self.jump_img
         if self.player_jump:
-            self.player_rect.y -= self.jump_vel * 4
+            self.player_rect.y -= int(self.jump_vel * 4)
             self.jump_vel -= 0.8
-        if self.jump_vel < - self.JUMP_VEL:
+        if self.jump_vel < -self.JUMP_VEL:
             self.player_jump = False
             self.jump_vel = self.JUMP_VEL
+
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
