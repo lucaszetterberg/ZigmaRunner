@@ -1,6 +1,7 @@
 import pygame 
 import random
 import os
+import sys
 
 pygame.init()
 
@@ -18,6 +19,7 @@ white = (200,200,200)
 
 CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
+
 
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1200
@@ -151,41 +153,80 @@ class Cloud:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
 
+def menu():
+    title_font = pygame.font.Font('freesansbold.ttf', 50)
+    menu_font = pygame.font.Font('freesansbold.ttf', 30)
 
-    ## Parameters for screen an player setup
-    ## Objects for colours, placeholder for when images are added
+    title_text = title_font.render('Zigma Runner', True, white)
+    title_rect = title_text.get_rect()
+    title_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3)
+
+    start_text = menu_font.render('Press SPACE to start', True, white)
+    start_rect = start_text.get_rect()
+    start_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
+    quit_text = menu_font.render('Press Q to quit', True, white)
+    quit_rect = quit_text.get_rect()
+    quit_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
+
+        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+        SCREEN.blit(title_text, title_rect)
+        SCREEN.blit(start_text, start_rect)
+        SCREEN.blit(quit_text, quit_rect)
+        pygame.display.update()
+
+
+def draw_background():
+    global x_pos_bg, y_pos_bg
+    image_width = BG.get_width()
+    SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+    SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+    if x_pos_bg <= -image_width:
+        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+        x_pos_bg = 0
+    x_pos_bg -= gameSpeed
+
+
+def score():
+    global points, gameSpeed
+    points += 1
+    if points % 100  == 0:
+        gameSpeed += 1
+
+    text = font.render("Points: " + str(points), True, (255,255,255))
+    textRect = text.get_rect()
+    textRect.center = (1100, 40)
+    SCREEN.blit(text, textRect)
+
+    
           
-def main(): 
+def main():
+    # Show the menu and wait for user input
+
+    menu()
+    global gameSpeed, x_pos_bg, y_pos_bg, points
     cloud = Cloud()
+    death_count = 0
     
     ## Makes timer, sets gameRunning to true (if gameRunning is false the game will not run)
     timer = pygame.time.Clock()
 
     player = Player()
     GAMERUNNING = True
-        
-    global gameSpeed, x_pos_bg, y_pos_bg, points
-    def score():
-        global points, gameSpeed
-        points += 1
-        if points % 100  == 0:
-            gameSpeed += 1
+    
 
-        text = font.render("Points: " + str(points), True, (255,255,255))
-        textRect = text.get_rect()
-        textRect.center = (1100, 40)
-        SCREEN.blit(text, textRect)
-
-
-    def draw_background():
-        global x_pos_bg, y_pos_bg
-        image_width = BG.get_width()
-        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
-        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-        if x_pos_bg <= -image_width:
-            SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-            x_pos_bg = 0
-        x_pos_bg -= gameSpeed
     
     ## Main game loop, can be viewed as what is happening in each frame
     
@@ -210,7 +251,9 @@ def main():
             obstacle.draw(SCREEN)
             obstacle.update()
             if player.player_rect.colliderect(obstacle.rect):
-                pygame.draw.rect(SCREEN, (250, 0, 0), player.player_rect, 2)
+                pygame.time.delay(1000)
+                GAMERUNNING = False
+
 
         player.draw(SCREEN)
         player.update(keyboardInput)
