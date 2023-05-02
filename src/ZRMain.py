@@ -8,7 +8,7 @@ pygame.init()
 
 
 ## Global constants
-global gameSpeed, obstacles
+global gameSpeed, obstacles, GAME_OVER
 x_pos_bg = 0
 y_pos_bg = 380
 points = 0
@@ -16,6 +16,8 @@ font = pygame.font.Font('freesansbold.ttf', 20)
 gameSpeed = 15
 black = (0,0,0)
 white = (200,200,200)
+
+HIGHSCORE = 0
 
 CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
@@ -36,6 +38,11 @@ pygame.display.set_caption("Zigma runner")
 fps = 60 
 font = pygame.font.Font("freesansbold.ttf",16)
 obstacles = []
+GAME_OVER = False
+
+## Uncomment to enable background picture
+##MAIN_BG = pygame.image.load(os.path.join("images", "Desert1.jpg"))
+##MAIN_BG = pygame.transform.scale(MAIN_BG, SCREEN.get_size())
 
 class Player:
     PLAYER_X = 80
@@ -69,18 +76,21 @@ class Player:
         if self.step_index >= 10:
             self.step_index = 0
 
-        if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
-            self.player_slide = False
-            self.player_run = False
-            self.player_jump = True
-        elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
-            self.player_slide = True
-            self.player_run = False
-            self.player_jump = False
-        elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
-            self.player_slide = False
-            self.player_run = True
-            self.player_jump = False
+        if not GAME_OVER:
+            if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
+                self.player_slide = False
+                self.player_run = False
+                self.player_jump = True
+            elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
+                self.player_slide = True
+                self.player_run = False
+                self.player_jump = False
+            elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
+                self.player_slide = False
+                self.player_run = True
+                self.player_jump = False
+            
+            
 
     def slide(self):
         self.image = self.slide_img[0]
@@ -94,7 +104,8 @@ class Player:
         self.player_rect = self.image.get_rect()
         self.player_rect.x = self.PLAYER_X
         self.player_rect.y = self.PLAYER_Y
-        self.step_index += 1
+        if not GAME_OVER:
+            self.step_index += 1
 
     def jump(self):
         self.image = self.jump_img
@@ -200,23 +211,59 @@ def draw_background():
 
 
 def score():
-    global points, gameSpeed
-    points += 1
-    if points % 100  == 0:
-        gameSpeed += 1
+    global points, gameSpeed, GAME_OVER
+    if not GAME_OVER:
+        points += 1
+        if points % 100  == 0:
+            gameSpeed += 1
 
     text = font.render("Points: " + str(points), True, (255,255,255))
     textRect = text.get_rect()
     textRect.center = (1100, 40)
     SCREEN.blit(text, textRect)
+    
+    
+def game_over(keyboardInput):
+    global GAME_OVER, gameSpeed, points, HIGHSCORE
+    
+    if points > HIGHSCORE:
+        HIGHSCORE = points
+        
+    menu_font = pygame.font.Font('freesansbold.ttf', 30)
+    small_font = pygame.font.Font('freesansbold.ttf', 20)
+    
+    highscore_text = font.render("Highscore: " + str(HIGHSCORE), True, (255,255,255))
+    game_over_text = menu_font.render("Game Over", True, black)
+    restart_text = small_font.render("Press R to restart game", True, black)
+    
+    highscore_rect = highscore_text.get_rect()
+    highscore_rect.center = (950, 40)
+    
+    game_over_rect = game_over_text.get_rect()
+    game_over_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    restart_rect = restart_text.get_rect()
+    restart_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
+    SCREEN.blit(game_over_text, game_over_rect)
+    SCREEN.blit(restart_text, restart_rect)
+    SCREEN.blit(highscore_text, highscore_rect)
+    
+    GAME_OVER = True
+    gameSpeed = 0
+    
+    if keyboardInput[pygame.K_r]:
+        Player.PLAYER_Y = 310
+        obstacles.pop()
+        points = 0
+        gameSpeed = 15
+        GAME_OVER = False
+    
 
     
           
 def main():
     # Show the menu and wait for user input
-
     menu()
-    global gameSpeed, x_pos_bg, y_pos_bg, points
+    ##global gameSpeed, x_pos_bg, y_pos_bg, points
     cloud = Cloud()
     death_count = 0
     
@@ -229,17 +276,18 @@ def main():
 
     
     ## Main game loop, can be viewed as what is happening in each frame
-    
+    pygame.event.clear()
     while GAMERUNNING:
         timer.tick(fps)
         SCREEN.fill((white))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
+        ## Uncomment to enable background picture
+        ##SCREEN.blit(MAIN_BG, (0,0))
         score()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-
                 GAMERUNNING = False
 
         keyboardInput = pygame.key.get_pressed()
@@ -251,10 +299,10 @@ def main():
             obstacle.draw(SCREEN)
             obstacle.update()
             if player.player_rect.colliderect(obstacle.rect):
-                pygame.time.delay(1000)
-                GAMERUNNING = False
-
-
+                ##pygame.time.delay(1000)
+                ##GAMERUNNING = False
+                game_over(keyboardInput)
+                
         player.draw(SCREEN)
         player.update(keyboardInput)
         
