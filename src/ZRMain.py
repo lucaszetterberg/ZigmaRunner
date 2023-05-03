@@ -19,7 +19,7 @@ white = (200,200,200)
 
 HIGHSCORE = 0
 
-CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
+CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
 
 
