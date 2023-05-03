@@ -17,9 +17,9 @@ gameSpeed = 15
 black = (0,0,0)
 white = (200,200,200)
 
-HIGHSCORE = 0
+highscore = 0
 
-CLOUD = pygame.image.load(os.path.join("src", "Cloud.png"))
+CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
 
 
@@ -32,7 +32,7 @@ JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
 SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
+LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
 
 pygame.display.set_caption("Zigma runner")
 fps = 60 
@@ -144,7 +144,7 @@ class SmallCactus(Obstacle):
 class LargeCactus(Obstacle):
     def __init__(self, image):
         self.image = image
-        self.type = 0
+        self.type = random.randint(0,2)
         super().__init__(image, self.type)
         self.rect.y = 300
 
@@ -224,15 +224,15 @@ def score():
     
     
 def game_over(keyboardInput):
-    global GAME_OVER, gameSpeed, points, HIGHSCORE
+    global GAME_OVER, gameSpeed, points, highscore, GAMERUNNING
     
-    if points > HIGHSCORE:
-        HIGHSCORE = points
-        
+    if points > highscore:
+        highscore = points
+    
     menu_font = pygame.font.Font('freesansbold.ttf', 30)
     small_font = pygame.font.Font('freesansbold.ttf', 20)
     
-    highscore_text = font.render("Highscore: " + str(HIGHSCORE), True, (255,255,255))
+    highscore_text = font.render("Highscore: " + str(highscore), True, (255,255,255))
     game_over_text = menu_font.render("Game Over", True, black)
     restart_text = small_font.render("Press R to restart game", True, black)
     
@@ -247,6 +247,7 @@ def game_over(keyboardInput):
     SCREEN.blit(restart_text, restart_rect)
     SCREEN.blit(highscore_text, highscore_rect)
     
+    
     GAME_OVER = True
     gameSpeed = 0
     
@@ -256,9 +257,11 @@ def game_over(keyboardInput):
         points = 0
         gameSpeed = 15
         GAME_OVER = False
-    
+        main()
+    elif keyboardInput[pygame.K_q]:
+        pygame.quit()
+        
 
-    
           
 def main():
     # Show the menu and wait for user input
@@ -293,6 +296,7 @@ def main():
         keyboardInput = pygame.key.get_pressed()
         
         if len(obstacles) == 0:
+            
             obstacles.append(LargeCactus(LARGE_CACTUS))
         
         for obstacle in obstacles:
