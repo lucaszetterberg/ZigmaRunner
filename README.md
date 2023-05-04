@@ -15,5 +15,3 @@ Lucas Zetterberg
 
 * Pygame
 * Random
-* Sys
-* OS
