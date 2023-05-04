@@ -10,11 +10,11 @@ RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.im
 JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
 SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
 SMALL_OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
+OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png")),pygame.image.load(os.path.join("src", "Stone.png")) ]
 
 ## Positioning for visual assets
 x_pos_bg = 0
-y_pos_bg = 380
+y_pos_bg = 490
 
 ## Screen parameters
 SCREEN_HEIGHT = 700
