@@ -1,50 +1,22 @@
-import pygame 
-import random
-import os
-import sys
-from main import Main
+import pygame, random, os, sys
 from game import Game
+from constants import *
 
 pygame.init()
 
-## Global constants
-global gameSpeed, obstacles, game_over_game
-x_pos_bg = 0
-y_pos_bg = 380
+## Global variables
+global gameSpeed, obstacles, game_over_game, highscore
 points = 0
-font = pygame.font.Font('freesansbold.ttf', 20)
 gameSpeed = 15
-black = (0,0,0)
-white = (200,200,200)
 game_over_game = False
 
-
 highscore = 0
-
-CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
-BG = pygame.image.load(os.path.join("src", "Track.png"))
-
-
-SCREEN_HEIGHT = 700
-SCREEN_WIDTH = 1200
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.image.load(os.path.join("images", "ZigmaRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
-SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
-
-SMALL_OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
 
 pygame.display.set_caption("Zigma runner")
 fps = 60 
 font = pygame.font.Font("freesansbold.ttf",16)
 obstacles = []
 game_over = False
-
-## Uncomment to enable background picture
-##MAIN_BG = pygame.image.load(os.path.join("images", "Desert2.png"))
-##MAIN_BG = pygame.transform.scale(MAIN_BG, SCREEN.get_size())
 
 class Player:
     PLAYER_X = 80
@@ -231,7 +203,6 @@ def menu(game_over):
         SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
         pygame.display.update()
 
-
 def draw_background():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
@@ -241,7 +212,6 @@ def draw_background():
         SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
         x_pos_bg = 0
     x_pos_bg -= gameSpeed
-
 
 def score():
     global points, gameSpeed, game_over, highscore
@@ -255,7 +225,6 @@ def score():
     textRect = text.get_rect()
     textRect.center = (1100, 40)
     SCREEN.blit(text, textRect)
-
 
 def Game(LARGE_OBSTACLES):
     # Show the menu and wait for user input
@@ -306,9 +275,7 @@ def Game(LARGE_OBSTACLES):
         pygame.display.flip()
     
     pygame.quit()
-          
-          
-          
+                  
 def main():
     ##while True:
         menu(game_over=False)
