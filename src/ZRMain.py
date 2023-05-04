@@ -1,48 +1,27 @@
-import pygame 
-import random
-import os
-import sys
+import pygame, random, os, sys
+from constants import *
 
 pygame.init()
 
 
+## Global variables
+global gameSpeed, obstacles, game_over_game, highscore
 
-## Global constants
-global gameSpeed, obstacles, GAME_OVER
-x_pos_bg = 0
-y_pos_bg = 500
+
+
+
+
 points = 0
-font = pygame.font.Font('freesansbold.ttf', 20)
 gameSpeed = 15
-black = (0,0,0)
-white = (200,200,200)
+game_over_game = False
 
 highscore = 0
 
-CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
-BG = pygame.image.load(os.path.join("src", "Track.png"))
-
-
-SCREEN_HEIGHT = 700
-SCREEN_WIDTH = 1200
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.image.load(os.path.join("images", "ZigmaRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
-SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
-
-SMALL_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
-
 pygame.display.set_caption("Zigma runner")
 fps = 60 
-font = pygame.font.Font("freesansbold.ttf",16)
+##font = pygame.font.Font("freesansbold.ttf",16)
 obstacles = []
-GAME_OVER = False
-
-## Uncomment to enable background picture
-##MAIN_BG = pygame.image.load(os.path.join("images", "Desert1.jpg"))
-##MAIN_BG = pygame.transform.scale(MAIN_BG, SCREEN.get_size())
+game_over = False
 
 class Player:
     PLAYER_X = 80
@@ -76,21 +55,19 @@ class Player:
         if self.step_index >= 10:
             self.step_index = 0
 
-        if not GAME_OVER:
-            if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
-                self.player_slide = False
-                self.player_run = False
-                self.player_jump = True
-            elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
-                self.player_slide = True
-                self.player_run = False
-                self.player_jump = False
-            elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
-                self.player_slide = False
-                self.player_run = True
-                self.player_jump = False
-            
-            
+        ##if not game_over:
+        if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
+            self.player_slide = False
+            self.player_run = False
+            self.player_jump = True
+        elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
+            self.player_slide = True
+            self.player_run = False
+            self.player_jump = False
+        elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
+            self.player_slide = False
+            self.player_run = True
+            self.player_jump = False  
 
     def slide(self):
         self.image = self.slide_img[0]
@@ -104,7 +81,7 @@ class Player:
         self.player_rect = self.image.get_rect()
         self.player_rect.x = self.PLAYER_X
         self.player_rect.y = self.PLAYER_Y
-        if not GAME_OVER:
+        if not game_over_game:
             self.step_index += 1
 
     def jump(self):
@@ -135,7 +112,7 @@ class Obstacle:
     def draw(self, ZRMain):
         SCREEN.blit(self.image[self.type], self.rect)
 
-class SmallCactus(Obstacle):
+class SmallObstacles(Obstacle):
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
@@ -166,7 +143,8 @@ class Cloud:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
 
-def menu():
+def menu(game_over):
+    global highscore
     title_font = pygame.font.Font('freesansbold.ttf', 50)
     menu_font = pygame.font.Font('freesansbold.ttf', 30)
 
@@ -181,25 +159,56 @@ def menu():
     quit_text = menu_font.render('Press Q to quit', True, white)
     quit_rect = quit_text.get_rect()
     quit_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
+    
+    small_font = pygame.font.Font('freesansbold.ttf', 20)
+    
+    highscore_text = font.render("Highscore: " + str(highscore), True, (255,255,255))
+    game_over_text = menu_font.render("Game Over", True, black)
+    restart_text = small_font.render("Press R to restart game, press Q to quit, press M to return to main menu", True, black)
+    
+    highscore_rect = highscore_text.get_rect()
+    highscore_rect.center = (950, 40)
+    
+    game_over_rect = game_over_text.get_rect()
+    game_over_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    restart_rect = restart_text.get_rect()
+    restart_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
+   
 
     while True:
+        
+        if not game_over:
+                SCREEN.fill((black))
+                SCREEN.blit(title_text, title_rect)
+                SCREEN.blit(start_text, start_rect)
+                SCREEN.blit(quit_text, quit_rect)
+                SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+        elif game_over:
+                SCREEN.blit(game_over_text, game_over_rect)
+                SCREEN.blit(restart_text, restart_rect)
+                SCREEN.blit(highscore_text, highscore_rect)
+                SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+                
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                    pygame.quit()
+                    sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    return
+                if event.key == pygame.K_SPACE and not game_over:
+                    Game(LARGE_CACTUS)
                 if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
+                if event.key == pygame.K_r and game_over:
+                    Game(LARGE_CACTUS)
+                if event.key == pygame.K_m and game_over:
+                    menu(game_over=False)
+            
+                
+                
 
         SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
-        SCREEN.blit(title_text, title_rect)
-        SCREEN.blit(start_text, start_rect)
-        SCREEN.blit(quit_text, quit_rect)
         pygame.display.update()
-
 
 def draw_background():
     global x_pos_bg, y_pos_bg
@@ -211,66 +220,29 @@ def draw_background():
         x_pos_bg = 0
     x_pos_bg -= gameSpeed
 
-
 def score():
-    global points, gameSpeed, GAME_OVER
-    if not GAME_OVER:
-        points += 1
-        if points % 100  == 0:
-            gameSpeed += 1
+    global points, gameSpeed, game_over, highscore
+    points += 1
+    if points > highscore:
+        highscore = points
+    if points % 100  == 0:
+        gameSpeed += 1
 
     text = font.render("Points: " + str(points), True, (255,255,255))
     textRect = text.get_rect()
     textRect.center = (1100, 40)
     SCREEN.blit(text, textRect)
-    
-    
-def game_over(keyboardInput):
-    global GAME_OVER, gameSpeed, points, highscore, GAMERUNNING
-    
-    if points > highscore:
-        highscore = points
-    
-    menu_font = pygame.font.Font('freesansbold.ttf', 30)
-    small_font = pygame.font.Font('freesansbold.ttf', 20)
-    
-    highscore_text = font.render("Highscore: " + str(highscore), True, (255,255,255))
-    game_over_text = menu_font.render("Game Over", True, black)
-    restart_text = small_font.render("Press R to restart game", True, black)
-    
-    highscore_rect = highscore_text.get_rect()
-    highscore_rect.center = (950, 40)
-    
-    game_over_rect = game_over_text.get_rect()
-    game_over_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    restart_rect = restart_text.get_rect()
-    restart_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
-    SCREEN.blit(game_over_text, game_over_rect)
-    SCREEN.blit(restart_text, restart_rect)
-    SCREEN.blit(highscore_text, highscore_rect)
-    
-    
-    GAME_OVER = True
-    gameSpeed = 0
-    
-    if keyboardInput[pygame.K_r]:
-        Player.PLAYER_Y = 430
-        obstacles.pop()
-        points = 0
-        gameSpeed = 15
-        GAME_OVER = False
-        main()
-    elif keyboardInput[pygame.K_q]:
-        pygame.quit()
-        
 
-          
-def main():
+def Game(LARGE_OBSTACLES):
     # Show the menu and wait for user input
-    menu()
+    global gameSpeed, obstacles, points
+
     ##global gameSpeed, x_pos_bg, y_pos_bg, points
     cloud = Cloud()
     death_count = 0
+    points = 0
+    obstacles = []
+    gameSpeed = 15
     
     ## Makes timer, sets gameRunning to true (if gameRunning is false the game will not run)
     timer = pygame.time.Clock()
@@ -278,18 +250,16 @@ def main():
     player = Player()
     GAMERUNNING = True
     
-
-    
     ## Main game loop, can be viewed as what is happening in each frame
     pygame.event.clear()
     while GAMERUNNING:
         timer.tick(fps)
         SCREEN.fill((white))
+        ## Uncomment to enable background picture
+        ##SCREEN.blit(MAIN_BG, (0,0))
         draw_background()
         cloud.draw(SCREEN)
         cloud.update()
-        ## Uncomment to enable background picture
-        ##SCREEN.blit(MAIN_BG, (0,0))
         score()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -298,16 +268,13 @@ def main():
         keyboardInput = pygame.key.get_pressed()
         
         if len(obstacles) == 0:
-            
-            obstacles.append(LargeCactus(LARGE_CACTUS))
+            obstacles.append(LargeCactus(LARGE_OBSTACLES))
         
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update()
             if player.player_rect.colliderect(obstacle.rect):
-                ##pygame.time.delay(1000)
-                ##GAMERUNNING = False
-                game_over(keyboardInput)
+                menu(game_over=True)
                 
         player.draw(SCREEN)
         player.update(keyboardInput)
@@ -315,5 +282,10 @@ def main():
         pygame.display.flip()
     
     pygame.quit()
+                  
+def main():
+    ##while True:
+        menu(game_over=False)
+        ##Game(LARGE_CACTUS)
     
 main()
