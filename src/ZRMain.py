@@ -1,5 +1,4 @@
 import pygame, random, os, sys
-from game import Game
 from constants import *
 
 pygame.init()
@@ -206,7 +205,7 @@ def menu(game_over):
         SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
         pygame.display.update()
 
-def draw_background():
+def draw_track():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
@@ -253,7 +252,7 @@ def Game(LARGE_OBSTACLES):
         SCREEN.fill((white))
         ## Uncomment to enable background picture
         ##SCREEN.blit(MAIN_BG, (0,0))
-        draw_background()
+        draw_track()
         cloud.draw(SCREEN)
         cloud.update()
         score()
