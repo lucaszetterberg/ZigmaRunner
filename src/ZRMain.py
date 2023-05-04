@@ -7,11 +7,6 @@ pygame.init()
 
 ## Global variables
 global gameSpeed, obstacles, game_over_game, highscore
-
-
-
-
-
 points = 0
 gameSpeed = 15
 game_over_game = False
