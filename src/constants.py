@@ -2,7 +2,7 @@ import pygame,os
 
 
 
-
+pygame.init()
 ## Visual assets 
 CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
 BG = pygame.image.load(os.path.join("src", "Track.png"))
