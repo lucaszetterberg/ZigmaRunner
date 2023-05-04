@@ -124,6 +124,13 @@ class LargeCactus(Obstacle):
         self.type = random.randint(0,2)
         super().__init__(image, self.type)
         self.rect.y = 420
+
+class Stone(Obstacle):
+    def __init__(self, image):
+        self.image = image
+        self.type = 3
+        super().__init__(image, self.type)
+        self.rect.y = 330
         
         
 
@@ -195,12 +202,12 @@ def menu(game_over):
                     sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not game_over:
-                    Game(LARGE_CACTUS)
+                    Game(OBSTACLES)
                 if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
                 if event.key == pygame.K_r and game_over:
-                    Game(LARGE_CACTUS)
+                    Game(OBSTACLES)
                 if event.key == pygame.K_m and game_over:
                     menu(game_over=False)
             
@@ -266,10 +273,16 @@ def Game(LARGE_OBSTACLES):
                 GAMERUNNING = False
 
         keyboardInput = pygame.key.get_pressed()
+
+        numb = random.randint(0,1)
         
-        if len(obstacles) == 0:
+        if len(obstacles) == 0 and numb == 1:
             obstacles.append(LargeCactus(LARGE_OBSTACLES))
-        
+
+        if len(obstacles) == 0 and numb == 0:
+             obstacles.append(Stone(LARGE_OBSTACLES))
+
+
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update()
