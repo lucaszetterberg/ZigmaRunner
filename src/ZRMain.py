@@ -144,7 +144,7 @@ class Cloud:
         SCREEN.blit(self.image, (self.x, self.y))
 
 
-def draw_background():
+def draw_track():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
@@ -171,6 +171,7 @@ def Game(LARGE_OBSTACLES):
     global gameSpeed, obstacles, points, game_over
   
     points = 0
+    fps = 60
     obstacles = []
     gameSpeed = 15
     game_over = False
@@ -228,7 +229,7 @@ def main():
         if game_state == 1:
             game_state = menu(game_over=False)
         elif game_state == 2:
-            Delan = Game(LARGE_CACTUS)
+            Delan = Game(OBSTACLES)
             if Delan:
                 game_state = menu(game_over=True)
         
