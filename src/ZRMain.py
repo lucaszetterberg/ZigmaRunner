@@ -14,7 +14,7 @@ highscore = 0
 
 pygame.display.set_caption("Zigma runner")
 fps = 60 
-font = pygame.font.Font("freesansbold.ttf",16)
+##font = pygame.font.Font("freesansbold.ttf",16)
 obstacles = []
 game_over = False
 
