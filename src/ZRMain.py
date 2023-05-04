@@ -148,10 +148,12 @@ class LargeCactus(Obstacle):
         super().__init__(image, self.type)
         self.rect.y = 420
 
+
+
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
-        self.y = random.randint(50, 100)
+        self.y = random.randint(50, 200)
         self.image = CLOUD
         self.width = self.image.get_width()
 
@@ -159,7 +161,7 @@ class Cloud:
         self.x -= gameSpeed
         if self.x < -self.width:
             self.x = SCREEN_WIDTH + random.randint(3800, 3800)
-            self.y = random.randint(50, 100)
+            self.y = random.randint(50, 200)
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
