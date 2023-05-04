@@ -4,8 +4,14 @@ from constants import *
 
 pygame.init()
 
+
 ## Global variables
 global gameSpeed, obstacles, game_over_game, highscore
+
+
+
+
+
 points = 0
 gameSpeed = 15
 game_over_game = False
@@ -20,8 +26,8 @@ game_over = False
 
 class Player:
     PLAYER_X = 80
-    PLAYER_Y = 310
-    PLAYER_Y_SLIDE = 340
+    PLAYER_Y = 430
+    PLAYER_Y_SLIDE = 470
     JUMP_VEL = 8.5
 
     def __init__(self):
@@ -111,19 +117,21 @@ class SmallObstacles(Obstacle):
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 325
+        self.rect.y = 445
         
 class LargeCactus(Obstacle):
     def __init__(self, image):
         self.image = image
         self.type = random.randint(0,2)
         super().__init__(image, self.type)
-        self.rect.y = 300
+        self.rect.y = 420
+
+
 
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
-        self.y = random.randint(50, 100)
+        self.y = random.randint(50, 200)
         self.image = CLOUD
         self.width = self.image.get_width()
 
@@ -131,7 +139,7 @@ class Cloud:
         self.x -= gameSpeed
         if self.x < -self.width:
             self.x = SCREEN_WIDTH + random.randint(3800, 3800)
-            self.y = random.randint(50, 100)
+            self.y = random.randint(50, 200)
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
