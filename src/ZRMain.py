@@ -1,5 +1,5 @@
 import pygame, random, os, sys
-# Move to the parent directory to get access to images folder 
+# Move to the parent directory to get access to images  
 os.chdir("C:/DD1349/ZigmaRunner")
 from constants import *
 from menu import menu
@@ -50,12 +50,12 @@ class LargeCactus(Obstacle):
         super().__init__(image, self.type)
         self.rect.y = 407
 
-class Stone(Obstacle):
+class air_obstacles(Obstacle):
     def __init__(self, image):
         self.image = image
-        self.type = 3
+        self.type = random.randint(0, 1)
         super().__init__(image, self.type)
-        self.rect.y = 330
+        self.rect.y = 350
         
 class Cloud:
     def __init__(self):
@@ -116,8 +116,8 @@ def Game(LARGE_OBSTACLES):
     while game_running:
         timer.tick(fps)
         SCREEN.fill((white))
-        ##SCREEN.blit(MAIN_BG, (0,0))
-        ##SCREEN.fill(sand, (0, 500, SCREEN.get_width(), SCREEN.get_height()))
+        SCREEN.blit(MAIN_BG, (0,0))
+        SCREEN.fill(sand, (0, 500, SCREEN.get_width(), SCREEN.get_height()))
         ## Uncomment to enable background picture
         draw_track()
         cloud.draw(SCREEN)
@@ -135,7 +135,7 @@ def Game(LARGE_OBSTACLES):
         if len(obstacles) == 0 and numb == 0:
             obstacles.append(LargeCactus(LARGE_OBSTACLES))
         elif len(obstacles) == 0 and numb == 1:
-             obstacles.append(Stone(LARGE_OBSTACLES))
+             obstacles.append(air_obstacles(AIR_OBSTACLES))
         elif len(obstacles) == 0 and numb == 2:
             obstacles.append(SmallObstacles(SMALL_OBSTACLES))
 

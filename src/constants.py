@@ -1,7 +1,6 @@
 import pygame,os
 
 
-
 pygame.init()
 ## Visual assets 
 CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
@@ -10,7 +9,8 @@ RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.im
 JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
 SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
 SMALL_OBSTACLES = [pygame.image.load(os.path.join("images", "SmallRock1.png")), pygame.image.load(os.path.join("images", "SmallRock2.png")), pygame.image.load(os.path.join("images", "SmallRock3.png"))]
-OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png")),pygame.image.load(os.path.join("src", "Stone.png")) ]
+OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
+AIR_OBSTACLES = [pygame.image.load(os.path.join("images", "Dust1.png")), pygame.image.load(os.path.join("images", "Dust2.png"))]
 
 ## Positioning for visual assets
 x_pos_bg = 0
@@ -24,7 +24,7 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 ## Fonts
 font = pygame.font.Font('freesansbold.ttf', 20)
 font = pygame.font.Font("freesansbold.ttf",16)
-
+ 
 ## Colours
 black = (0,0,0)
 white = (200,200,200)
