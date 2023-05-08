@@ -1,4 +1,6 @@
 import pygame, random, os, sys
+# Move to the parent directory to get access to images folder 
+os.chdir("C:/DD1349/ZigmaRunner")
 from constants import *
 from menu import menu
 from player import Player
@@ -14,6 +16,8 @@ game_over_game = False
 highscore = 0
 
 pygame.display.set_caption("Zigma runner")
+
+
 obstacles = []
 game_over = False
 
