@@ -21,7 +21,7 @@ class Player:
     PLAYER_X = 80
     PLAYER_Y = 430
     PLAYER_Y_SLIDE = 470
-    JUMP_VEL = 8.5
+    JUMP_VEL = 8.5 
 
     def __init__(self):
         self.slide_img = SLIDING
@@ -171,7 +171,7 @@ def Game(LARGE_OBSTACLES):
     global gameSpeed, obstacles, points, game_over
   
     points = 0
-    fps = 60
+    fps = 50
     obstacles = []
     gameSpeed = 15
     game_over = False
@@ -180,6 +180,7 @@ def Game(LARGE_OBSTACLES):
 
     timer = pygame.time.Clock()
     cloud = Cloud()
+    c = Cloud()
     player = Player()
     
     ## Main game loop, can be viewed as what is happening in each frame
@@ -192,6 +193,7 @@ def Game(LARGE_OBSTACLES):
         draw_track()
         cloud.draw(SCREEN)
         cloud.update()
+
         score()
         
         for event in pygame.event.get():
