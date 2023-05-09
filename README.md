@@ -18,6 +18,6 @@ Lucas Zetterberg
 
 ## Install and Play
 
-To play the game the user must have access to this github repo in order to clone it and have access to the files. In order to clone the repo the user must ensure that they have an active ´ssh-key´ connected to their github account, otherwise the user must get one. To be able to open the files the user must have the programming language python installed on the computer along with the libraries namned under ´Technologies´. To then start the game the user has to navigate in their terminal to the cloned folder and run the main file with the command ´python3 ZRMain.py´. 
+To play the game the user must have access to this github repo in order to clone it and have access to the files. In order to clone the repo the user must ensure that they have an active `ssh-key` connected to their github account, otherwise the user must get one. To be able to open the files the user must have the programming language python installed on the computer along with the libraries namned under `Technologies`. To then start the game the user has to navigate in their terminal to the cloned folder and run the main file with the command `python ZRMain.py`. 
 
-The game controls are very simple with using either ´SPACE´ or the ´UP´ key. To slide the player has to press the ´DOWN´ key. The game speed will increase the longer the player keeps running.
+The game controls are very simple with using either `SPACE` or the `UP` key. To slide the player has to press the `DOWN` key. The game speed will increase the longer the player keeps running.
