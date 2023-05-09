@@ -1,7 +1,7 @@
 import pygame, sys
 from constants import *
 
-
+# Displays a simple menu
 def menu(game_over):
     title_font = pygame.font.Font('freesansbold.ttf', 50)
     menu_font = pygame.font.Font('freesansbold.ttf', 30)
