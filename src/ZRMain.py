@@ -1,4 +1,6 @@
 import pygame, random, os, sys
+# Move to the parent directory to get access to images  
+os.chdir("C:/DD1349/ZigmaRunner")
 from constants import *
 from menu import menu
 from player import Player
@@ -8,13 +10,14 @@ pygame.init()
 ## Global variables
 global gameSpeed, obstacles, game_over_game, highscore 
 
-
 points = 0
 gameSpeed = 15
 game_over_game = False
 highscore = 0
 
 pygame.display.set_caption("Zigma runner")
+
+
 obstacles = []
 game_over = False
 
@@ -35,25 +38,25 @@ class Obstacle:
 
 class SmallObstacles(Obstacle):
     def __init__(self, image):
-        self.type = 0
+        self.image = image
+        self.type = random.randint(0,2)
         super().__init__(image, self.type)
-        self.rect.y = 445
+        self.rect.y = 475
         
 class LargeCactus(Obstacle):
     def __init__(self, image):
         self.image = image
         self.type = random.randint(0,2)
         super().__init__(image, self.type)
-        self.rect.y = 420
+        self.rect.y = 407
 
-class Stone(Obstacle):
+class air_obstacles(Obstacle):
     def __init__(self, image):
         self.image = image
-        self.type = 3
+        self.type = random.randint(0, 1)
         super().__init__(image, self.type)
-        self.rect.y = 330
+        self.rect.y = 350
         
-
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
@@ -69,7 +72,6 @@ class Cloud:
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
-
 
 def draw_track():
     global x_pos_bg, y_pos_bg
@@ -114,8 +116,9 @@ def Game(LARGE_OBSTACLES):
     while game_running:
         timer.tick(fps)
         SCREEN.fill((white))
+        SCREEN.blit(MAIN_BG, (0,0))
+        SCREEN.fill(sand, (0, 500, SCREEN.get_width(), SCREEN.get_height()))
         ## Uncomment to enable background picture
-        ##SCREEN.blit(MAIN_BG, (0,0))
         draw_track()
         cloud.draw(SCREEN)
         cloud.update()
@@ -127,13 +130,14 @@ def Game(LARGE_OBSTACLES):
 
         keyboardInput = pygame.key.get_pressed()
 
-        numb = random.randint(0,1)
+        numb = random.randint(0,2)
         
-        if len(obstacles) == 0 and numb == 1:
-            obstacles.append(LargeCactus(LARGE_OBSTACLES))
-
         if len(obstacles) == 0 and numb == 0:
-             obstacles.append(Stone(LARGE_OBSTACLES))
+            obstacles.append(LargeCactus(LARGE_OBSTACLES))
+        elif len(obstacles) == 0 and numb == 1:
+             obstacles.append(air_obstacles(AIR_OBSTACLES))
+        elif len(obstacles) == 0 and numb == 2:
+            obstacles.append(SmallObstacles(SMALL_OBSTACLES))
 
 
         for obstacle in obstacles:
@@ -159,6 +163,5 @@ def main():
             Delan = Game(OBSTACLES)
             if Delan:
                 game_state = menu(game_over=True)
-        
 
 main()
