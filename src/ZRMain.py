@@ -1,12 +1,14 @@
 import pygame, random, os, sys
+# Move to the parent directory to get access to images  
+os.chdir("/Users/dilansaleh/ZigmaRunner")
 from constants import *
 from menu import menu
+from player import Player
 
 pygame.init()
 
 ## Global variables
 global gameSpeed, obstacles, game_over_game, highscore 
-
 
 points = 0
 gameSpeed = 15
@@ -14,83 +16,11 @@ game_over_game = False
 highscore = 0
 
 pygame.display.set_caption("Zigma runner")
+
+
 obstacles = []
 game_over = False
 
-class Player:
-    PLAYER_X = 80
-    PLAYER_Y = 430
-    PLAYER_Y_SLIDE = 470
-    JUMP_VEL = 8.5 
-
-    def __init__(self):
-        self.slide_img = SLIDING
-        self.run_img = RUNNING
-        self.jump_img = JUMPING
-
-        self.player_slide = False
-        self.player_run = True
-        self.player_jump = False
-
-        self.step_index = 0
-        self.image = self.run_img[0]
-        self.player_rect = self.image.get_rect()
-        self.player_rect.x = self.PLAYER_X
-        self.player_rect.y = self.PLAYER_Y
-        self.jump_vel = self.JUMP_VEL
-
-    def update(self, keyboardInput):
-        if self.player_slide:
-            self.slide()
-        if self.player_run:
-            self.run()
-        if self.player_jump:
-            self.jump()
-        if self.step_index >= 10:
-            self.step_index = 0
-
-        ##if not game_over:
-        if keyboardInput[pygame.K_UP] or keyboardInput[pygame.K_SPACE] and not self.player_jump:
-            self.player_slide = False
-            self.player_run = False
-            self.player_jump = True
-        elif keyboardInput[pygame.K_DOWN] and not self.player_jump:
-            self.player_slide = True
-            self.player_run = False
-            self.player_jump = False
-        elif not (self.player_jump or keyboardInput[pygame.K_DOWN]):
-            self.player_slide = False
-            self.player_run = True
-            self.player_jump = False  
-
-    def slide(self):
-        self.image = self.slide_img[0]
-        self.player_rect = self.image.get_rect()
-        self.player_rect.x = self.PLAYER_X
-        self.player_rect.y = self.PLAYER_Y_SLIDE
-        self.step_index += 1
-        
-    def run(self):
-        self.image = self.run_img[self.step_index // 5]
-        self.player_rect = self.image.get_rect()
-        self.player_rect.x = self.PLAYER_X
-        self.player_rect.y = self.PLAYER_Y
-        if not game_over_game:
-            self.step_index += 1
-
-    def jump(self):
-        self.image = self.jump_img
-        if self.player_jump:
-            self.player_rect.y -= int(self.jump_vel * 4)
-            self.jump_vel -= 0.8
-        if self.jump_vel < -self.JUMP_VEL:
-            self.player_jump = False
-            self.jump_vel = self.JUMP_VEL
-
-
-    def draw(self, SCREEN):
-        SCREEN.blit(self.image, (self.player_rect.x, self.player_rect.y))
-    
 class Obstacle:
     def __init__(self, image, type):
         self.image
@@ -108,25 +38,25 @@ class Obstacle:
 
 class SmallObstacles(Obstacle):
     def __init__(self, image):
-        self.type = 0
+        self.image = image
+        self.type = random.randint(0,2)
         super().__init__(image, self.type)
-        self.rect.y = 445
+        self.rect.y = 475
         
 class LargeCactus(Obstacle):
     def __init__(self, image):
         self.image = image
         self.type = random.randint(0,2)
         super().__init__(image, self.type)
-        self.rect.y = 420
+        self.rect.y = 407
 
-class Stone(Obstacle):
+class air_obstacles(Obstacle):
     def __init__(self, image):
         self.image = image
-        self.type = 3
+        self.type = random.randint(0, 1)
         super().__init__(image, self.type)
-        self.rect.y = 330
+        self.rect.y = 350
         
-
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
@@ -143,7 +73,6 @@ class Cloud:
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.x, self.y))
 
-
 def draw_track():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
@@ -153,6 +82,7 @@ def draw_track():
         SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
         x_pos_bg = 0
     x_pos_bg -= gameSpeed
+
 
 def score():
     global points, gameSpeed, game_over, highscore
@@ -164,8 +94,13 @@ def score():
 
     text = font.render("Points: " + str(points), True, (255,255,255))
     textRect = text.get_rect()
-    textRect.center = (1100, 40)
+    textRect.center = (950, 80)
     SCREEN.blit(text, textRect)
+
+    highscore_text = font.render("Highscore: " + str(highscore), True, (255,255,255))
+    highscoreRect = highscore_text.get_rect()
+    highscoreRect.center = (1100, 80)
+    SCREEN.blit(highscore_text, highscoreRect)
 
 def Game(LARGE_OBSTACLES):
     global gameSpeed, obstacles, points, game_over
@@ -184,12 +119,13 @@ def Game(LARGE_OBSTACLES):
     player = Player()
     
     ## Main game loop, can be viewed as what is happening in each frame
-    pygame.event.clear()
+    ##pygame.event.clear()
     while game_running:
         timer.tick(fps)
         SCREEN.fill((white))
+        SCREEN.blit(MAIN_BG, (0,0))
+        SCREEN.fill(sand, (0, 500, SCREEN.get_width(), SCREEN.get_height()))
         ## Uncomment to enable background picture
-        ##SCREEN.blit(MAIN_BG, (0,0))
         draw_track()
         cloud.draw(SCREEN)
         cloud.update()
@@ -202,13 +138,14 @@ def Game(LARGE_OBSTACLES):
 
         keyboardInput = pygame.key.get_pressed()
 
-        numb = random.randint(0,1)
+        numb = random.randint(0,2)
         
-        if len(obstacles) == 0 and numb == 1:
-            obstacles.append(LargeCactus(LARGE_OBSTACLES))
-
         if len(obstacles) == 0 and numb == 0:
-             obstacles.append(Stone(LARGE_OBSTACLES))
+            obstacles.append(LargeCactus(LARGE_OBSTACLES))
+        elif len(obstacles) == 0 and numb == 1:
+             obstacles.append(air_obstacles(AIR_OBSTACLES))
+        elif len(obstacles) == 0 and numb == 2:
+            obstacles.append(SmallObstacles(SMALL_OBSTACLES))
 
 
         for obstacle in obstacles:
@@ -234,8 +171,5 @@ def main():
             Delan = Game(OBSTACLES)
             if Delan:
                 game_state = menu(game_over=True)
-        
-            
-    
-    
+
 main()
