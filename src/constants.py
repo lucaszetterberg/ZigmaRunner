@@ -2,14 +2,14 @@ import pygame,os
 
 pygame.init()
 ## Visual assets 
-CLOUD = pygame.image.load(os.path.join("images", "Cloud.png"))
-BG = pygame.image.load(os.path.join("images", "Track.png"))
-RUNNING = [pygame.image.load(os.path.join("images", "ZigmaRun1.png")), pygame.image.load(os.path.join("images", "ZigmaRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("images", "ZigmaJump.png"))
-SLIDING = [pygame.image.load(os.path.join("images", "ZigmaSlide.png"))]
-SMALL_OBSTACLES = [pygame.image.load(os.path.join("images", "SmallRock1.png")), pygame.image.load(os.path.join("images", "SmallRock2.png")), pygame.image.load(os.path.join("images", "SmallRock3.png"))]
-OBSTACLES = [pygame.image.load(os.path.join("images", "LargeCactus1.png")), pygame.image.load(os.path.join("images", "LargeCactus2.png")), pygame.image.load(os.path.join("images", "LargeCactus3.png"))]
-AIR_OBSTACLES = [pygame.image.load(os.path.join("images", "Dust1.png")), pygame.image.load(os.path.join("images", "Dust2.png"))]
+CLOUD = pygame.image.load(os.path.join("../images", "Cloud.png"))
+BG = pygame.image.load(os.path.join("../images", "Track.png"))
+RUNNING = [pygame.image.load(os.path.join("../images", "ZigmaRun1.png")), pygame.image.load(os.path.join("../images", "ZigmaRun2.png"))]
+JUMPING = pygame.image.load(os.path.join("../images", "ZigmaJump.png"))
+SLIDING = [pygame.image.load(os.path.join("../images", "ZigmaSlide.png"))]
+SMALL_OBSTACLES = [pygame.image.load(os.path.join("../images", "SmallRock1.png")), pygame.image.load(os.path.join("../images", "SmallRock2.png")), pygame.image.load(os.path.join("../images", "SmallRock3.png"))]
+OBSTACLES = [pygame.image.load(os.path.join("../images", "LargeCactus1.png")), pygame.image.load(os.path.join("../images", "LargeCactus2.png")), pygame.image.load(os.path.join("../images", "LargeCactus3.png"))]
+AIR_OBSTACLES = [pygame.image.load(os.path.join("../images", "Dust1.png")), pygame.image.load(os.path.join("../images", "Dust2.png"))]
 
 ## Positioning for visual assets
 x_pos_bg = 0
@@ -33,7 +33,7 @@ white = (200,200,200)
 sand = (194, 178, 128)
 
 ## Background
-MAIN_BG = pygame.image.load(os.path.join("images", "Desert2.png"))
+MAIN_BG = pygame.image.load(os.path.join("../images", "Desert2.png"))
 MAIN_BG = pygame.transform.scale(MAIN_BG, SCREEN.get_size())
 
 ## Menu Parameters (includes text and positions of text)
