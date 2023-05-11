@@ -1,7 +1,7 @@
 # Importing libraries
 import pygame, random, os, sys
 # Move to the parent directory to get access to images  
-os.chdir("/Users/dilansaleh/ZigmaRunner")
+#os.chdir("/Users/dilansaleh/ZigmaRunner")
 from constants import *
 from menu import menu
 from player import Player
